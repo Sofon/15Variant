@@ -1,0 +1,202 @@
+{Создать типизированный файл а) из символов, считанных из текстового файла,
+б) из N псевдослучайных символов от А до Я.
+ Найти в типизированном файле элемент, удовлетворяющий условию Первого символа «Д» либо «Е»
+  (без переписывания в массив!), и переставить его с первым элементом файла.
+   Вывести данные из созданного, а затем и измененного типизированного файла,
+   или одно из двух сообщений: «Исходный файл пуст», «Искомого элемента в файле нет».
+
+Для решения задачи создать процедуры и кнопки: создания типизированного файла из текстового,
+ поиска+перестановки, вывода данных из типизированного файла в Memo.
+В процедуру вывода добавьте параметр Memo1 типа TMemo.}
+
+
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ComCtrls, ExtDlgs;
+
+type
+  TForm1 = class(TForm)
+    Memo1: TMemo;
+    OpenTextFileDialog1: TOpenTextFileDialog;
+    Button1: TButton;
+    Button2: TButton;
+    Edit1: TEdit;
+    UpDown1: TUpDown;
+    Label1: TLabel;
+    Edit2: TEdit;
+    Button3: TButton;
+    Button4: TButton;
+    OpenDialog1: TOpenDialog;
+    Button5: TButton;
+    Button6: TButton;
+    Label2: TLabel;
+    Label3: TLabel;
+    procedure Button5Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Edit2Click(Sender: TObject);
+    procedure Edit2Change(Sender: TObject);
+    procedure Edit2Exit(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+{$R *.dfm}
+type cfile=file of ansichar;
+
+function search(s:string):integer;
+   var f:cfile; ch:ansichar; i:integer;
+   begin  
+     try assignfile(f,s);reset(f);
+          seek(f,0); i:=0; 
+          while not(eof(f)or(ch='Е')or(ch='Д')) do
+            begin
+              read(f,ch);
+              inc(i);
+            end;
+
+     except
+     i:=-1;
+     end;
+     if eof(f)and (not((ch='Е')or(ch='Д'))) then i:=0;
+     result:=i;
+   end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var ch:ansichar; tipf:cfile; textf:textfile;fname:string;
+begin
+fname:='';
+if opentextfiledialog1.execute then
+begin
+ fname:=edit2.Text;
+ try
+   assignfile(textf,opentextfiledialog1.filename);
+   reset(textf);
+   try
+     assignfile(tipf,fname);
+     rewrite(tipf);
+     try
+        while not eof(textf) do
+          begin
+          read(textf,ch);
+          write(tipf,ch);
+         end;
+          button4.Click;
+          closefile(tipf);
+       except   label3.caption:='ошибка при чтении/записи';
+       end;
+   except   label3.caption:='ошибка при открытии типизир файла';
+   end;
+   closefile(textf);
+ except
+   label3.caption:='ошибка при открытии текст файла';
+ end;
+    label2.Caption:='';
+end;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+var ch:ansichar; tipf:cfile; i:byte;
+begin
+ try
+  assignfile(tipf,edit2.text);
+     rewrite(tipf);
+     try
+      randomize;
+        for i := 1 to strtoint(edit1.text) do
+            begin
+              ch:=ansichar(chr(192+random(64)));
+               write(tipf,ch);
+             end;
+         closefile(tipf);
+          button4.Click;
+        except   label3.caption:='ошибка при записи';
+       end;
+   except   label3.caption:='ошибка при открытии типизир файла';
+   end;
+   label2.Caption:='';
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+if opendialog1.execute then edit2.Text:=opendialog1.FileName
+ else 
+ if (edit2.text='Не задано') then 
+ if mrYes=MessageDlg('Не задано имя файла.Записать в файл 1.dat?',mtwarning,[mbYes, mbNo],0) then
+     edit2.Text:='1.dat';
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+var  tipf:cfile; ch:ansichar;
+begin
+   try
+     assignfile(tipf,edit2.text);
+     reset(tipf);
+     memo1.Clear;
+      seek(tipf,0);
+     while not eof(tipf) do begin read(tipf,ch);memo1.lines.add(ch);end;
+     closefile(tipf);
+   except label3.caption:='Ошибка при открытии файла';
+   end;
+end;
+
+procedure TForm1.Button5Click(Sender: TObject);
+var n:integer; ch,ch2:ansichar; f:cfile;
+begin
+   n:=search(edit2.Text);
+   button6.Click;
+   if n>0 then
+    begin
+      assignfile(f,edit2.text);
+      reset(f);
+      seek(f,0); read(f,ch);
+      seek(f,n-1);read(f,ch2);seek(f,n-1);write(f,ch);
+      seek(f,0);write(f,ch2);
+      closefile(f);
+      button5.Click;
+    end;
+   
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+var n:integer;
+begin
+   n:=search(edit2.Text);
+   if n>0 then label2.Caption:='его номер = '+inttostr(n)
+   else if n=0 then label2.Caption:='не найдено'
+   else  label2.Caption:='ошибка';
+end;
+
+procedure TForm1.Edit2Change(Sender: TObject);
+begin
+if not((edit2.Text='')or(edit2.text='Не задано')) then
+  begin button1.Enabled:=true;button2.Enabled:=true;button4.Enabled:=true;
+  button5.Enabled:=true;button6.Enabled:=true;end
+  else begin button1.Enabled:=false;button2.Enabled:=false;button4.Enabled:=false;
+  button5.Enabled:=false;button6.Enabled:=false;end
+end;
+
+procedure TForm1.Edit2Click(Sender: TObject);
+begin
+if edit2.Text='Не задано' then edit2.Text:='';
+end;
+
+procedure TForm1.Edit2Exit(Sender: TObject);
+begin
+  if edit2.Text='' then edit2.Text:='Не задано';
+end;
+
+end.

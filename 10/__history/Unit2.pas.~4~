@@ -1,0 +1,47 @@
+unit Unit2;
+
+interface
+
+type
+  PElem = ^TElem;
+  TElem = record
+      data: char;
+      next: PElem;
+  end;
+
+
+procedure newlist(var p:PElem;var pEnd:PElem;ch:char);
+procedure addfirst(var p:PElem;ch:char);
+procedure addlast(pEnd:PElem;ch:char);
+//procedure addmed(var p:PElem;n:integer;ch:char);
+
+//function search(p:Pelem;ch:char):integer;
+//procedure freelist(p:PElem);
+
+implementation
+ procedure newlist;
+ begin
+   new(p);
+   p^.data:=ch;
+   p^.next:=NIL;
+   pEnd:=p;
+ end;
+
+ procedure addfirst;
+ var newpoint:PElem;
+ begin
+    new(newpoint);
+    newpoint^.data:=ch;
+    newpoint^.next:=p;
+    p:=newpoint;
+ end;
+
+ procedure addlast;
+ var newpoint:PElem;
+    begin
+      new(newpoint);
+      newpoint^.data:=ch;
+      newpoint^.next:=NIL;
+      pEnd^.next:=newpoint;
+    end;
+end.

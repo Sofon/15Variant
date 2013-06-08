@@ -1,0 +1,84 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ComCtrls, Grids;
+
+type
+  TForm1 = class(TForm)
+    StringGrid1: TStringGrid;
+    Edit1: TEdit;
+    UpDown1: TUpDown;
+    Button1: TButton;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    procedure UpDown1Click(Sender: TObject; Button: TUDBtnType);
+    procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure StringGrid1Enter(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+type mas=array of real;
+
+function rec(x:mas;i,n:byte):real;
+  begin
+  //showmessage(inttostr(i)+' , '+inttostr(n));
+   if n=i then result:=x[i-1]/(i+1)
+    else result:=rec(x,i,((n+i) div 2))*rec(x,((n+i) div 2)+1,n);
+  end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var x:mas; res:real;
+    i,n:byte;
+begin
+  n:=strtoint(edit1.Text);
+  setlength(x,n);
+  try
+        for i:=1 to n do
+          x[i-1]:=strtofloat(stringgrid1.Cells[i,1]);
+         //-----------------------------------
+         res:=rec(x,1,n);
+         //-----------------------------------
+          label3.Caption:=floattostr(res, ffFixed, 5, 3);
+  except
+      showmessage('неверный формат числа в ячейке');
+  end;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+var i:byte;
+begin
+stringgrid1.Cells[0,0]:='\';
+stringgrid1.Cells[0,1]:='x';
+for i:=1 to 5 do
+  stringgrid1.Cells[i,0]:=inttostr(i);
+end;
+
+procedure TForm1.StringGrid1Enter(Sender: TObject);
+begin
+label3.Caption:='Не решено';
+end;
+
+procedure TForm1.UpDown1Click(Sender: TObject; Button: TUDBtnType);
+var n:byte;
+begin
+n:=strtoint(edit1.Text);
+stringgrid1.ColCount:=n+1;
+  stringgrid1.Cells[n,0]:=inttostr(n);
+end;
+
+end.

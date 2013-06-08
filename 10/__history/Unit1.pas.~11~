@@ -1,0 +1,104 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, unit2, StdCtrls, ComCtrls;
+
+type
+  TForm3 = class(TForm)
+    Button1: TButton;
+    Edit1: TEdit;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Button5: TButton;
+    Edit4: TEdit;
+    OpenDialog1: TOpenDialog;
+    Button6: TButton;
+    UpDown1: TUpDown;
+    procedure Button4Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button4Exit(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form3: TForm3;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TForm3.Button1Click(Sender: TObject);
+var i:integer;
+begin
+for i := 1 to strtoint(edit3.Text) do
+  add(listn,chr(random(15)));
+end;
+
+procedure TForm3.Button2Click(Sender: TObject);
+var p:PElem; s:string;
+begin  p:=listn;
+repeat
+s:=s+p^.data;
+p:=p^.next;
+until (p=NIL);
+edit4.Text:=s;
+end;
+
+procedure TForm3.Button3Click(Sender: TObject);
+begin
+add(listn,(edit1.text)[1]);
+end;
+
+procedure TForm3.Button4Click(Sender: TObject);
+begin
+edit2.Text:=inttostr(search(listn));
+end;
+
+
+procedure TForm3.Button4Exit(Sender: TObject);
+begin
+edit2.Text:='';
+end;
+
+procedure TForm3.Button5Click(Sender: TObject);
+var f:textfile;ch:char;
+begin
+if opendialog1.execute then
+    begin
+       try
+          assignfile(f,opendialog1.FileName);
+          reset(f);
+          while not eof(f) do
+            begin read(f,ch);add(listn,ch);
+            end;
+        closefile(f);
+        except showmessage('ошибка при чтении');
+        end;
+    end;
+end;
+
+procedure TForm3.Button6Click(Sender: TObject);
+begin
+freelist(listn);
+
+new(listn);
+listn^.next:=nil;
+listn^.data:=' ';
+listk:=listn;
+end;
+
+end.

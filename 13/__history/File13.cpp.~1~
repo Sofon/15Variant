@@ -1,0 +1,41 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include <tchar.h>
+#include <stdio.h>
+#include <conio.h>
+//---------------------------------------------------------------------------
+
+#pragma argsused
+int _tmain(int argc, _TCHAR* argv[])
+{
+int a[100];int c[100];
+int nc;na;
+int mina,minc;
+float sr;
+printf("vvod razmerov a[100],c[100]: ");
+scanf("%d %d\n",na,nc);
+	mina:=a[0];
+	for (int i = 1; i < na; i++) {
+	  if (a[i]<mina) {
+		 mina:=a[i];
+		 printf("mina = %d ",&mina);
+	  }
+	}
+	//-------
+	minc:=c[0];
+	for (int i = 1; i < nc; i++) {
+	  if (c[i]<minc) {
+		 minc:=c[i];
+		 printf("minc = %d\n",&minc);
+	  }
+	}
+	sr:=(mina+minc)/2;
+	printf("srednee arifm minimumov = ",&sr);
+	getch();
+	return 0;
+}
+
+
+//---------------------------------------------------------------------------

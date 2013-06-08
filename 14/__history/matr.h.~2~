@@ -1,0 +1,5 @@
+#include <stdio.h>
+#include <conio.h>
+
+void reading(int** x,int n,int m);
+void writing(int** x,int n,int m);

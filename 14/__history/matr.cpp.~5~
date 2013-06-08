@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <conio.h>
+
+void reading(int** x,int* n,int* m)
+{
+	printf("vvod razmerov matr:\nstrok:");
+	scanf("%d",n);printf("stolbzov:");
+	scanf("%d",m);
+	x=new int*[*n];
+	for (int i = 0; i < *n; i++) {
+	   x[i]=new int[*m];
+	}
+
+	for (int i = 0; i < *n; i++) {
+	   for (int j = 0; j < *m; j++) {
+		  scanf("%d",x[i,j]);
+	   }
+	   printf("-----\n");
+	}
+}
+
+void writing(int** x,int n,int m)
+{
+	printf("matrica imeet vid\n");
+	for (int i = 0; i < n; i++) {
+	   for (int j = 0; j < m; j++) {
+		  printf("%d ",&x[i,j]);
+	   }
+	   printf("end\n");
+	}
+	getch();
+	for (int i = 0; i < n; i++) {
+	   delete [] x[i];
+	}
+	delete [] x;
+}

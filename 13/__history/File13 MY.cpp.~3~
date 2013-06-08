@@ -1,0 +1,47 @@
+//---------------------------------------------------------------------------
+   /*
+	номер наибольшего элемента массива а
+	и наибольшего значения среди модулей элементов а
+   */
+#pragma hdrstop
+
+#include <tchar.h>
+#include <stdio.h>
+#include <conio.h>
+//---------------------------------------------------------------------------
+
+#pragma argsused
+int _tmain(int argc, _TCHAR* argv[])
+{
+int* a;
+int na;
+int max,maxabs;
+printf("vvod razmerov a: ");
+scanf("%d",&na);
+a = new int [na];
+printf("vvod matrizi:\n");
+
+for (int i = 0; i < na; i++) {
+   scanf("%d",&a[i]);
+}  printf("\n");
+
+
+//-------
+	max=a[0];maxabs=a[0];
+	for (int i = 1; i < na; i++) {
+	  if (a[i]>max) {
+		 max=a[i];
+	  }
+	  if (abs(a[i]))>maxabs {
+		  maxabs=a[i];
+	  }
+	}
+	printf("max = %d\n",max);
+	printf("maxabs = %d\n",maxabs);
+	delete [] a;
+	getch();
+	return 0;
+}
+
+
+//---------------------------------------------------------------------------
